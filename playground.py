@@ -5,23 +5,29 @@ import numpy as np
 import scipy.io
 import matplotlib.pyplot as plt
 
-
-video_path = 'video_samples/vibration3.avi'
-number_components = 20
+video_path = 'video_samples/vibration4.avi'
+number_components = 12
 components_order = np.arange(number_components)
 sources_order = np.arange(number_components)
-# modal_coordinates_order = np.array([14, 15, 2, 3, 5, 6])
+
 # modal_coordinates_order = np.array([0, 1, 2, 3, 6, 7])
-modal_coordinates_order = np.array([4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+# modal_coordinates_order = np.array([14, 15, 2, 3, 5, 6])
+# modal_coordinates_order = np.array([4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+modal_coordinates_order = np.array([0, 1, 8, 9, 10, 11])
+# modal_coordinates_order = np.arange(number_components)
+
 # factors = np.array([30, 15, 5])
 # factors = np.array([5, 15, 30])
-factors = np.array([15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15])
+# factors = np.array([15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15])
+factors = np.ones(number_components) * 30
 
 # set the video object
 video = Video(video_path)
 
 if video_path == 'video_samples/vibration3.avi':
     video.crop_video(3016)
+elif video_path == 'video_samples/vibration4.avi':
+    video.crop_video(120)
 
 # Start video magnification
 magnification = Video_Magnification(video)
@@ -60,8 +66,11 @@ magnification.visualize_mode_shapes_and_modal_coordinates(modal_coordinates_orde
 magnification.visualize_components_or_sources('modal coordinates', np.arange(len(modal_coordinates_order)))
 
 # video reconstruction
-mother_matrix = magnification.video_reconstruction(modal_coordinates_order.size//2, factors)
-for result in range(modal_coordinates_order.size//2+1):
+number_of_modes = modal_coordinates_order.size//2
+mother_matrix = magnification.video_reconstruction(number_of_modes, factors)
+
+for result in range(number_of_modes + 1):
+# for result in range(1):
     magnification.create_video_from_frames("mode%d" % result, frames=mother_matrix[result])
 
 # saving matrices

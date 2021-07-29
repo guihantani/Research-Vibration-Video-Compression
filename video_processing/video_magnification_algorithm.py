@@ -9,6 +9,7 @@ from video_processing.visualization_functions import plot_components_or_sources
 from video_processing.visualization_functions import plot_mode_shapes_and_modal_coordinates
 import matplotlib.pyplot as plt
 import random
+import skvideo.io
 
 
 class Video_Magnification:
@@ -184,6 +185,35 @@ class Video_Magnification:
             mother_matrix[time_serie][mother_matrix[time_serie] < 0] = 0
         return mother_matrix
 
+    def video_reconstruction_2(self, number_of_modes, factors, do_unscramble=False):
+        print("Reconstruting video from mode shapes and modal coordinates")
+        print("Converting matrices to float16")
+        self.modal_coordinates = self.modal_coordinates.astype('float16')
+        self.mode_shapes = self.mode_shapes.astype('float16')
+        self.time_serie_mean = self.time_serie_mean.astype('float16')
+        print("creating mother matrix")
+        heigh = self.video.frames_shape[0]
+        width = self.video.frames_shape[1]
+        reconstructed = np.matmul(self.modal_coordinates, self.mode_shapes.T)
+        mother_matrix = np.zeros((1, self.video.number_of_frames, heigh, width), dtype="float16")
+        if do_unscramble:
+            background = self.time_serie_mean[self.encryption_key].reshape(self.video.frames_shape, order="F")
+        else:
+            background = self.time_serie_mean.reshape(self.video.frames_shape, order="F")
+        print("Creating frames for each mode")
+        for row in range(self.video.number_of_frames):
+            if not do_unscramble:
+                mother_matrix[0][row] = reconstructed[row, :].reshape(self.video.frames_shape, order="F") + background
+                if row != 0:
+                    mother_matrix[0][row-1] = mother_matrix[0][row].copy()
+            else:
+                mother_matrix[0][row] = reconstructed[row, self.encryption_key].reshape(self.video.frames_shape, order="F") + background
+        print("Rescaling frames\n")
+        for time_serie in range(1):
+            mother_matrix[time_serie][mother_matrix[time_serie] > 255] = 255
+            mother_matrix[time_serie][mother_matrix[time_serie] < 0] = 0
+        return mother_matrix
+
     def calculate_error(self):
         print('Calculating error and norm between original and reconstructed videos')
         self.error = np.zeros(self.video.frames_shape, dtype='float64')
@@ -202,8 +232,9 @@ class Video_Magnification:
         height, width = frames[0].shape[0:2]
         size = (width, height)
         print("Creating video with size: ", size)
-        fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+        fourcc = cv2.VideoWriter_fourcc(*'HFYU')
         out = cv2.VideoWriter('video_samples/%s.avi' % name, fourcc, fps, size, 0)
         for i in range(len(frames)):
             out.write(frames[i].astype('uint8'))
         out.release()
+
