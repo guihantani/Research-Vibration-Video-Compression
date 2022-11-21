@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_components_or_sources(rows, columns, t, freq, visualize, order):
+def plot_components_or_sources(rows, columns, t, freq, visualize, order, name):
     fig, axs = plt.subplots(rows, 3)
     for row in range(rows):
         for column in range(columns):
@@ -13,7 +13,8 @@ def plot_components_or_sources(rows, columns, t, freq, visualize, order):
 
             aux = (np.angle(np.fft.fft(visualize[:, order[row]]))) ** 2
             axs[row][2].plot(freq[2:300], aux[2:300], color="#069AF3")
-    plt.show()
+    plt.savefig('figures/'+name)
+    # plt.show()
 
 
 def plot_mode_shapes_and_modal_coordinates(info, columns, t, do_unscramble):
@@ -26,4 +27,5 @@ def plot_mode_shapes_and_modal_coordinates(info, columns, t, do_unscramble):
         else:
             mode_shape = info.mode_shapes[info.encryption_key, column]
             axs2[1][column].imshow(mode_shape.reshape(info.video.frames_shape, order="F"), 'gray', aspect='auto')
-    plt.show()
+    # plt.show()
+    plt.savefig("figures/mode shapes and modal coordinates")

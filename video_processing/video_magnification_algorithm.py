@@ -136,12 +136,12 @@ class Video_Magnification:
         freq = np.arange(self.video.number_of_frames) / (self.video.number_of_frames / self.video.fps)
         rows = len(order)
         columns = 3
-        plot_components_or_sources(rows, columns, t, freq, visualize, order)
+        plot_components_or_sources(rows, columns, t, freq, visualize, order, name=subject)
 
     def visualize_mode_shapes_and_modal_coordinates(self, order, do_unscramble=False):
         t = np.arange(self.video.number_of_frames) / self.video.fps
         columns = len(order)
-        plot_mode_shapes_and_modal_coordinates(self, columns, t, do_unscramble)
+        plot_mode_shapes_and_modal_coordinates(self, columns, t, do_unscramble, )
 
     def video_reconstruction(self, number_of_modes, factors, do_unscramble=False):
         print("Reconstruting video from mode shapes and modal coordinates")

@@ -2,31 +2,39 @@ from video_processing import Video
 from video_processing import Video_Magnification
 from video_processing import h5py_tools
 import numpy as np
-import scipy.io
-import matplotlib.pyplot as plt
 
-video_path = 'video_samples/vibration4.avi'
-number_components = 12
+
+video_path = 'video_samples/beam.avi'
+
+beam_number_components = 8
+structure_number_components = 12
+three_beams_number_components = 20
+
+number_components = beam_number_components
 components_order = np.arange(number_components)
 sources_order = np.arange(number_components)
 
-# modal_coordinates_order = np.array([0, 1, 2, 3, 6, 7])
-# modal_coordinates_order = np.array([14, 15, 2, 3, 5, 6])
-# modal_coordinates_order = np.array([4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
-modal_coordinates_order = np.array([0, 1, 8, 9, 10, 11])
-# modal_coordinates_order = np.arange(number_components)
+beam_coordinates_order = np.array([0, 1, 2, 3, 6, 7])
+structure_coordinates_order = np.array([14, 15, 2, 3, 5, 6])
+three_beams_coordinates_order = np.array([4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19])
+waves_coordinates_order = np.array([0, 1, 8, 9, 10, 11])
+all_coordinates = np.arange(number_components)
 
-# factors = np.array([30, 15, 5])
-# factors = np.array([5, 15, 30])
-# factors = np.array([15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15])
-factors = np.ones(number_components) * 30
+modal_coordinates_order = beam_coordinates_order
+
+beam_factors = np.array([30, 15, 5])
+structure_factors = np.array([5, 15, 30])
+three_beams_factors = np.array([15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15])
+all_factors = np.ones(number_components) * 30
+
+factors = beam_factors
 
 # set the video object
 video = Video(video_path)
 
-if video_path == 'video_samples/vibration3.avi':
+if video_path == 'video_samples/three_beams.avi':
     video.crop_video(3016)
-elif video_path == 'video_samples/vibration4.avi':
+elif video_path == 'video_samples/waves.avi':
     video.crop_video(120)
 
 # Start video magnification
