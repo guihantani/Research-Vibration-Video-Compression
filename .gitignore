@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 .idea
 *.mat
-three_beams.avi
+*.avi
 *.h5
 
 # C extensions

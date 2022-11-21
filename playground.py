@@ -78,7 +78,6 @@ number_of_modes = modal_coordinates_order.size//2
 mother_matrix = magnification.video_reconstruction(number_of_modes, factors)
 
 for result in range(number_of_modes + 1):
-# for result in range(1):
     magnification.create_video_from_frames("mode%d" % result, frames=mother_matrix[result])
 
 # saving matrices
@@ -89,6 +88,8 @@ background = np.copy(magnification.time_serie_mean.astype("uint8"))
 h5py_tools.save_matrix(background, "background")
 
 # reading matrices
-# magnification.mode_shapes = h5py_tools.read_matrix("mode_shapes")
-# magnification.modal_coordinates = h5py_tools.read_matrix("modal_coordinates")
-# magnification.time_serie_mean = h5py_tools.read_matrix("background")
+magnification.mode_shapes = h5py_tools.read_matrix("mode_shapes")
+magnification.modal_coordinates = h5py_tools.read_matrix("modal_coordinates")
+magnification.time_serie_mean = h5py_tools.read_matrix("background")
+mother_matrix = magnification.video_reconstruction_2(number_of_modes, factors)
+magnification.create_video_from_frames("recontruction", frames=mother_matrix[0])
