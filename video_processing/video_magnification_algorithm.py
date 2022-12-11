@@ -232,8 +232,23 @@ class Video_Magnification:
         height, width = frames[0].shape[0:2]
         size = (width, height)
         print("Creating video with size: ", size)
-        fourcc = cv2.VideoWriter_fourcc(*'HFYU')
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
         out = cv2.VideoWriter('video_samples/%s.avi' % name, fourcc, fps, size, 0)
+        for i in range(len(frames)):
+            out.write(frames[i].astype('uint8'))
+        out.release()
+
+    def create_modes_from_frames(self, name, frames=None, fps=None):
+        if frames is None:
+            frames = self.video.frames
+        if fps is None:
+            fps = self.video.fps
+        print('Creating video from the frames')
+        height, width = frames[0].shape[0:2]
+        size = (width, height)
+        print("Creating video with size: ", size)
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        out = cv2.VideoWriter('binary_files/%s.avi' % name, fourcc, fps, size, 0)
         for i in range(len(frames)):
             out.write(frames[i].astype('uint8'))
         out.release()
